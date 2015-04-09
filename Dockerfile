@@ -16,6 +16,6 @@ ENV PATH $GROOVY_HOME/bin:$PATH
 ADD public /public
 ADD m8rten-se.groovy /
 ADD m8rten-se.properties /
-ADD ratpack.properties
+ADD ratpack.properties /
 
 CMD ["groovy", "m8rten-se.groovy"]
