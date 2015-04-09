@@ -20,9 +20,6 @@ ratpack {
         get("vaxthuset/api/status") {
             response.send new URL("https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?apiKey=$mongolabApiKey").text
         }
-        get("vaxthuset/api/key") {
-            response.send mongolabApiKey
-        }
 
     	/*
     	 * Static stuff
