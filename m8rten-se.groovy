@@ -6,7 +6,7 @@ import static ratpack.groovy.Groovy.ratpack
 /*
  * Loads configuration file for site
  */
-def properties = new ConfigSlurper().parse(new File("m8rten-se.properties").text)
+def mongolabApiKey = System.getenv('MONGOLAB_API_KEY') 
 
 /*
  * Defines handlers
@@ -18,7 +18,7 @@ ratpack {
 		 * Api calls
 		 */
         get("vaxthuset/api/status") {
-            response.send new URL("https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?apiKey=${properties.apiKey}").text
+            response.send new URL("https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?apiKey=$mongolabApiKey").text
         }
 
     	/*
