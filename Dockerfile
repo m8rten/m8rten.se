@@ -19,3 +19,5 @@ ADD m8rten-se.properties /
 ADD ratpack.properties /
 
 CMD ["groovy", "m8rten-se.groovy"]
+
+EXPOSE 5050
