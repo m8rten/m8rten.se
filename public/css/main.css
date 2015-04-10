@@ -106,14 +106,48 @@ html, body {
     width: 100%;
 }
 
-div {
+div.black {
+    background: #FF33CC;
     width: 5%;
     height: 5%;
     float: left;
 }
 
-div.black {
-    background: #FF33CC;
+/* unvisited link */
+a:link {
+    color: #00FF00;
+}
+
+/* visited link */
+a:visited {
+    color: #00FF00;
+}
+
+/* mouse over link */
+a:hover {
+    color: #00FF00;
+}
+
+/* selected link */
+a:active {
+    color: #00FF00;
+}
+
+a {
+    background:#000;    
+    padding: 2px;
+}
+
+
+#navigate {
+    position:absolute;
+    z-index:1;
+}
+
+#navigate > div {
+    position: relative;
+    top:30px;
+    left: 10px;
 }
 
 
@@ -132,6 +166,9 @@ div.black {
 
 div.white {
     background: #FF6600;
+    width: 5%;
+    height: 5%;
+    float: left;
 }
 
 
