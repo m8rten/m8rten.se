@@ -5,7 +5,9 @@ import static groovyx.net.http.Method.*
 import static groovyx.net.http.ContentType.*
 import java.util.Random  
 
-def http = new HTTPBuilder( 'https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?apiKey=54SF3Z7w9BVVSE7w8C0lNCuzNnMtoPPl' )
+def mongolabApiKey = System.getenv('MONGOLAB_API_KEY') 
+
+def http = new HTTPBuilder( 'https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?apiKey=$mongolabApiKey' )
 
 Random rand = new Random() 
 
