@@ -17,8 +17,16 @@ ratpack {
 		/*
 		 * Api calls
 		 */
-        get("vaxthuset/api/status") {
-            response.send new URL("https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?apiKey=$mongolabApiKey").text
+        get("vaxthuset/api/status-hourly") {
+            response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?q={"minute":0}&apiKey=$mongolabApiKey""").text
+        }
+
+        get("vaxthuset/api/status-last") {
+            response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?s={_id:-1}}&l=1&apiKey=$mongolabApiKey""").text
+        }
+
+        get("vaxthuset/api/status-last-24") {
+            response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?s={_id:-1}}&l=1440&apiKey=$mongolabApiKey""").text
         }
 
     	/*
