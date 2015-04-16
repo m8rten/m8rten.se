@@ -21,11 +21,11 @@ ratpack {
             response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?q={"minute":0}&apiKey=$mongolabApiKey""").text
         }
 
-        get("vaxthuset/api/status-last") {
+        get("vaxthuset/api/status-latest") {
             response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?s={_id:-1}}&l=1&apiKey=$mongolabApiKey""").text
         }
 
-        get("vaxthuset/api/status-last-24") {
+        get("vaxthuset/api/status-latest-24") {
             response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?s={_id:-1}}&l=1440&apiKey=$mongolabApiKey""").text
         }
 

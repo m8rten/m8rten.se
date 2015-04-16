@@ -1,10 +1,12 @@
 var data = null;
 var graph = null;
 
-google.load("visualization", "1");
+google.load('visualization', '1', {packages: ['corechart', 'line']});
+
 
 // Set callback to run when API is loaded
 google.setOnLoadCallback(fetchHistoricData);
+google.setOnLoadCallback(fetch24HourData);
 
 function custom(x, y) {
     return (Math.sin(x/50) * Math.cos(y/50) * 50 + 50);
@@ -39,12 +41,13 @@ function drawVisualization(historicData) {
         backgroundColor: {
             stroke: '#FFFFFF'
         },
-        width:  "600px",
-        height: "600px",
         style: "surface",
         showPerspective: true,
         showGrid: true,
         showShadow: false,
+        width: "300px",
+        backgroundColor: "#ECE9C6",
+        height: "300px",
         keepAspectRatio: true,
         verticalRatio: 0.5
     };
@@ -65,4 +68,47 @@ function fetchHistoricData(){
             drawVisualization(response);
         }   
     });
+}
+
+function fetch24HourData(){
+    $.ajax({
+      dataType: "json",
+      url: 'api/status-latest-24',
+      type: "GET",
+      success: function( response ) {
+            draw24Hour(response);
+        }   
+    });
+}
+
+function draw24Hour(historicData) {
+    var data = new google.visualization.DataTable();
+    data.addColumn('number', 'Minut');
+    data.addColumn('number', 'Temp');
+    data.addColumn('number', 'Ventilation');
+
+    for (var minute = 0; minute < 24*60; minute+=1) {
+        var status = historicData[minute];
+        data.addRow([minute, status.temperature, 1]);
+    }
+
+    var options = {
+        legend: {
+            position : "none"
+        },
+        width: "300px",
+        backgroundColor: "#ECE9C6",
+        height: "300px",
+        series: {
+            0: {color: 'black',
+                curveType: 'function'
+            },
+            1: {color: 'black',
+                curveType: 'function'
+            }
+        }
+    };
+
+      var chart = new google.visualization.LineChart(document.getElementById('24h-graph'));
+      chart.draw(data, options);
 }
