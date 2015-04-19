@@ -93,6 +93,7 @@ $(document).ready(function() {
     setInterval(function() {
         fetchStatus();
         updateImage();
+        fetch24HourData();
     }, 60000);
 });     
 

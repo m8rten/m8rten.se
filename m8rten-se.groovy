@@ -38,7 +38,7 @@ ratpack {
         }
 
         get("vaxthuset/api/status-latest-24") {
-            response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?s={_id:-1}}&l=1440&apiKey=$mongolabApiKey""").text
+            response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?s={_id:-1}}&l=60&apiKey=$mongolabApiKey""").text
         }
 
     	/*
