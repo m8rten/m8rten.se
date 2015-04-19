@@ -3,11 +3,6 @@ var graph = null;
 
 google.load('visualization', '1', {packages: ['corechart', 'line']});
 
-
-// Set callback to run when API is loaded
-google.setOnLoadCallback(fetchHistoricData);
-google.setOnLoadCallback(fetch24HourData);
-
 function custom(x, y) {
     return (Math.sin(x/50) * Math.cos(y/50) * 50 + 50);
 }
@@ -70,6 +65,39 @@ function fetchHistoricData(){
     });
 }
 
+
+function fetchStatus(){
+    $.ajax({
+      dataType: "json",
+      url: 'api/status-latest',
+      type: "GET",
+      success: function( response ) {
+            $("#current-temperature").text(response[0].temperature);
+
+        }   
+    });
+}
+
+function updateImage(){
+    d = new Date();
+    $("img.foto").attr("src", "img/foto.jpg?"+d.getTime());
+}
+
+$(document).ready(function() {
+
+    // Set callback to run when API is loaded
+    google.setOnLoadCallback(fetchHistoricData);
+    google.setOnLoadCallback(fetch24HourData);
+    fetchStatus();
+
+    setInterval(function() {
+        fetchStatus();
+        updateImage();
+    }, 60000);
+});     
+
+
+
 function fetch24HourData(){
     $.ajax({
       dataType: "json",
@@ -87,9 +115,9 @@ function draw24Hour(historicData) {
     data.addColumn('number', 'Temp');
     data.addColumn('number', 'Ventilation');
 
-    for (var minute = 0; minute < 24*60; minute+=1) {
+    for (var minute = 0; minute < 60; minute+=1) {
         var status = historicData[minute];
-        data.addRow([minute, status.temperature, 1]);
+        data.addRow([minute, status.temperature, status.ventilation*5]);
     }
 
     var options = {
@@ -100,10 +128,10 @@ function draw24Hour(historicData) {
         backgroundColor: "#ECE9C6",
         height: "300px",
         series: {
-            0: {color: 'black',
+            0: {color: '#424242',
                 curveType: 'function'
             },
-            1: {color: 'black',
+            1: {color: '#424242',
                 curveType: 'function'
             }
         }

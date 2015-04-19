@@ -2,11 +2,23 @@
 @GrabResolver(name="OJO", root="https://oss.jfrog.org/artifactory/repo")
 @Grab("io.ratpack:ratpack-groovy:0.9.13")
 import static ratpack.groovy.Groovy.ratpack
+import groovy.json.JsonSlurper
 
 /*
  * Loads configuration file for site
  */
 def mongolabApiKey = System.getenv('MONGOLAB_API_KEY') 
+
+/*
+ * Updates image every 60 s
+ */
+def imageUpdater = Thread.start {
+    while(true){
+        def url = new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/bilder?q={"_id":"foto"}&apiKey=$mongolabApiKey""")
+        new File('public/vaxthuset/img/foto.jpg').bytes = new JsonSlurper().parseText(url.text)[0].base64.decodeBase64()        
+        sleep(60000)
+    }
+}
 
 /*
  * Defines handlers
