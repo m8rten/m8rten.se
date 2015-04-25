@@ -144,6 +144,16 @@ div.table-cell{
     width:100%;
 }
 
+div.title {
+    display: block;
+    float: right;  
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    font-size:10px;
+    color: #424242;
+}
+
 div.foto {
     width: 300px;
     height: 300px;    
