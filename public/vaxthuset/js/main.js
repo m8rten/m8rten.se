@@ -80,7 +80,7 @@ function fetchStatus(){
 
 function updateImage(){
     d = new Date();
-    $("img.foto").attr("src", "img/foto.jpg?"+d.getTime());
+    $("#status-foto").attr("src", "img/foto.jpg?"+d.getTime());
 }
 
 $(document).ready(function() {
@@ -89,6 +89,7 @@ $(document).ready(function() {
     google.setOnLoadCallback(fetchHistoricData);
     google.setOnLoadCallback(fetch24HourData);
     fetchStatus();
+    fetchDailyPhotos();
 
     setInterval(function() {
         fetchStatus();
@@ -98,6 +99,30 @@ $(document).ready(function() {
 });     
 
 
+function fetchDailyPhotos(){
+    $.ajax({
+        dataType: "json",
+        url: 'api/daily-photos',
+        type: "GET",
+        success: function( response ) {        
+            var dailyPhotoDates = response.dates;
+            var i = dailyPhotoDates.length-1;
+            
+            $("#daily-photo").attr("src", "img/daily-photo"+i+".jpg");
+            $("#daily-photo-date").text(dailyPhotoDates[i]);
+            i = i - 1;
+            
+            $('#daily-photo').click(function() {
+                $("#daily-photo").attr("src", "img/daily-photo"+i+".jpg");
+                $("#daily-photo-date").text(dailyPhotoDates[i]);
+                i = i - 1;
+                if(i == - 1){
+                    i = dailyPhotoDates.length-1;
+                }
+            }); 
+        }   
+    });
+}
 
 function fetch24HourData(){
     $.ajax({
