@@ -35,7 +35,7 @@ def dailyFotoUpdater = Thread.start {
     /*
      * Load all photos at startup
      */
-    def url = new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/dagliga-fotot?s={_id:-1}&l=4&apiKey=$mongolabApiKey""")
+    def url = new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/dagliga-fotot?s={_id:-1}&l=40&apiKey=$mongolabApiKey""")
     def photos = new JsonSlurper().parseText(url.text)
     //def photos = ["asdf","asdfdd"]
     for(i=0; i < photos.size(); i++){
