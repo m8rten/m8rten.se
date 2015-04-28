@@ -106,18 +106,18 @@ function fetchDailyPhotos(){
         type: "GET",
         success: function( response ) {        
             var dailyPhotoDates = response.dates;
-            var i = dailyPhotoDates.length-1;
+            var i = 0
             
             $("#daily-photo").attr("src", "img/daily-photo"+i+".jpg");
             $("#daily-photo-date").text(dailyPhotoDates[i]);
-            i = i - 1;
+            i++;
             
             $('#daily-photo').click(function() {
                 $("#daily-photo").attr("src", "img/daily-photo"+i+".jpg");
                 $("#daily-photo-date").text(dailyPhotoDates[i]);
-                i = i - 1;
-                if(i == - 1){
-                    i = dailyPhotoDates.length-1;
+                i++;
+                if(i == dailyPhotoDates.length){
+                    i = 0;
                 }
             }); 
         }   

@@ -37,10 +37,8 @@ def dailyFotoUpdater = Thread.start {
      */
     def url = new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/dagliga-fotot?s={_id:-1}&l=40&apiKey=$mongolabApiKey""")
     def photos = new JsonSlurper().parseText(url.text)
-    //def photos = ["asdf","asdfdd"]
-    for(i=0; i < photos.size(); i++){
+    for(i=photos.size()-1; i >= 0 ; i--){
         photoCatalog.add(photos[i].date)
-        //photoCatalog.add(photos[i])
         new File("public/vaxthuset/img/daily-photo${i}.jpg").bytes = photos[i].base64.decodeBase64()
     }
 
@@ -54,7 +52,7 @@ def dailyFotoUpdater = Thread.start {
             new File("public/vaxthuset/img/daily-photo${photoCatalog.size()-1}.jpg").bytes = latestPhoto[0].base64.decodeBase64()
         }
 
-        sleep(7200000)
+        sleep(120000)
     }
 }
 
