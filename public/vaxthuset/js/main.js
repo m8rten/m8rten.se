@@ -1,21 +1,41 @@
-var data = null;
-var graph = null;
-
 google.load('visualization', '1', {packages: ['corechart', 'line']});
 
-function custom(x, y) {
-    return (Math.sin(x/50) * Math.cos(y/50) * 50 + 50);
-}
+$(document).ready(function() {
 
+    google.setOnLoadCallback(updateHistoricData);
+    google.setOnLoadCallback(update24hourData);
+
+    updateCurrentTemperature();
+    loadDailyPhotoDates();
+
+    setInterval(function() {
+        updateCurrentTemperature();
+        updateImage();
+        update24hourData();
+    }, 60000);
+});
+
+
+function updateHistoricData(){
+    $.ajax({
+      dataType: "json",
+      url: 'api/status-hourly',
+      type: "GET",
+      success: function( response ) {
+            drawHistoricData(response);
+        }   
+    });
+}
 // Called when the Visualization API is loaded.
-function drawVisualization(historicData) {
+function drawHistoricData(historicData) {
+    var data = null;
+    var graph = null;
+
     // Create and populate a data table.
     data = new google.visualization.DataTable();
     data.addColumn('number', 'Dag');
     data.addColumn('number', 'Klockan');
     data.addColumn('number', 'C');
-
-    //for (var hour =)
 
     // create some nice looking data with sin/cos
     var steps = 50;  // number of datapoints will be steps*steps
@@ -54,19 +74,7 @@ function drawVisualization(historicData) {
     graph.draw(data, options);
 }
 
-function fetchHistoricData(){
-    $.ajax({
-      dataType: "json",
-      url: 'api/status-hourly',
-      type: "GET",
-      success: function( response ) {
-            drawVisualization(response);
-        }   
-    });
-}
-
-
-function fetchStatus(){
+function updateCurrentTemperature(){
     $.ajax({
       dataType: "json",
       url: 'api/status-latest',
@@ -82,49 +90,41 @@ function updateImage(){
     d = new Date();
     $("#status-foto").attr("src", "img/foto.jpg?"+d.getTime());
 }
+  
+function dailyPhotoLooper(dailyPhotoDates){
+    var isLooping = false;
+    var currentDailyPhoto = 0;
+    var loop;
+    $('#daily-photo').click(function() {
+        if(!isLooping){
+            loop = setInterval(function() {
+                $("#daily-photo").attr("src", "img/daily-photo"+currentDailyPhoto+".jpg");
+                $("#daily-photo-date").text(dailyPhotoDates[currentDailyPhoto]);
+                currentDailyPhoto++;
+                if(currentDailyPhoto == dailyPhotoDates.length){
+                    currentDailyPhoto = 0;
+                };
+            }, 500);
+            isLooping = true;
+        } else {
+            clearInterval(loop)
+            isLooping = false;
+        }
+    });
+}
 
-$(document).ready(function() {
-
-    // Set callback to run when API is loaded
-    google.setOnLoadCallback(fetchHistoricData);
-    google.setOnLoadCallback(fetch24HourData);
-    fetchStatus();
-    fetchDailyPhotos();
-
-    setInterval(function() {
-        fetchStatus();
-        updateImage();
-        fetch24HourData();
-    }, 60000);
-});     
-
-
-function fetchDailyPhotos(){
+function loadDailyPhotoDates(){
     $.ajax({
         dataType: "json",
         url: 'api/daily-photos',
         type: "GET",
         success: function( response ) {        
-            var dailyPhotoDates = response.dates;
-            var i = 0
-            
-            $("#daily-photo").attr("src", "img/daily-photo"+i+".jpg");
-            $("#daily-photo-date").text(dailyPhotoDates[i]);
-            i++;
-            
-            $('#daily-photo').click(function() {
-                $("#daily-photo").attr("src", "img/daily-photo"+i+".jpg");
-                $("#daily-photo-date").text(dailyPhotoDates[i]);
-                i++;
-                if(i == dailyPhotoDates.length){
-                    i = 0;
-                }
-            }); 
+            dailyPhotoLooper(response.dates);
         }   
     });
 }
 
-function fetch24HourData(){
+function update24hourData(){
     $.ajax({
       dataType: "json",
       url: 'api/status-latest-24',
@@ -140,6 +140,10 @@ function draw24Hour(historicData) {
     data.addColumn('number', 'Minut');
     data.addColumn('number', 'Temp');
     data.addColumn('number', 'Ventilation');
+
+    //console.log(new Date("2010-09-21T02:57:00Z"))
+    //console.log("2010-09-21T02:57:00Z")
+    //console.log(historicData[0].date.replace("/","-").replace("/","-").replace(".",":").replace("000Z","00Z"))
 
     for (var minute = 0; minute < 60; minute+=1) {
         var status = historicData[minute];
