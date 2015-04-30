@@ -13,8 +13,14 @@ $(document).ready(function() {
         updateImage();
         update24hourData();
     }, 60000);
-});
 
+    $(".title").hide();
+
+
+    $("#help").click(function(){
+        $(".title").toggle();
+    });
+});
 
 function updateHistoricData(){
     $.ajax({
@@ -26,7 +32,7 @@ function updateHistoricData(){
         }   
     });
 }
-// Called when the Visualization API is loaded.
+// Called when the Visualization API is loaded. 
 function drawHistoricData(historicData) {
     var data = null;
     var graph = null;
@@ -61,7 +67,7 @@ function drawHistoricData(historicData) {
         showGrid: true,
         showShadow: false,
         width: "300px",
-        backgroundColor: "#ECE9C6",
+        backgroundColor: "#E5DED1",
         height: "300px",
         keepAspectRatio: true,
         verticalRatio: 0.5
@@ -155,7 +161,7 @@ function draw24Hour(historicData) {
             position : "none"
         },
         width: "300px",
-        backgroundColor: "#ECE9C6",
+        backgroundColor: "#E5DED1",
         height: "300px",
         series: {
             0: {color: '#424242',
