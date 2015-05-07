@@ -9,13 +9,6 @@ import groovy.json.JsonBuilder
  */
 def mongolabApiKey = System.getenv('MONGOLAB_API_KEY') 
 
-
-/*
- * The photo catalog
- */
-def photoCatalog = []
-
-
 /*
  * Updates image every 60 s
  */
@@ -28,31 +21,13 @@ def imageUpdater = Thread.start {
 }
 
 /*
- * Updates daily foto two times every 
+ * Updates image every 60 s
  */
-def dailyFotoUpdater = Thread.start {
-
-    /*
-     * Load all photos at startup
-     */
-    def url = new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/dagliga-fotot?s={_id:-1}&l=40&apiKey=$mongolabApiKey""")
-    def photos = new JsonSlurper().parseText(url.text)
-    for(i=photos.size()-1; i >= 0 ; i--){
-        photoCatalog.add(photos[i].date)
-        new File("public/vaxthuset/img/daily-photo${i}.jpg").bytes = photos[i].base64.decodeBase64()
-    }
-
-    /*
-     * Adds latest photos to catalog if new
-     */
+def gifUpdater = Thread.start {
     while(true){
-        def latestPhoto = new JsonSlurper().parseText(new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/dagliga-fotot?s={_id:-1}&l=1&apiKey=$mongolabApiKey""").text)
-        if(!latestPhoto[0].date.equals(photoCatalog.last())) {
-            photoCatalog.add(latestPhoto[0].date)
-            new File("public/vaxthuset/img/daily-photo${photoCatalog.size()-1}.jpg").bytes = latestPhoto[0].base64.decodeBase64()
-        }
-
-        sleep(120000)
+        def url = new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/bilder?q={"_id":"gif"}&apiKey=$mongolabApiKey""")
+        new File('public/vaxthuset/img/animation.gif').bytes = new JsonSlurper().parseText(url.text)[0].base64.decodeBase64()        
+        sleep(3600000)
     }
 }
 
@@ -75,18 +50,7 @@ ratpack {
 
         get("vaxthuset/api/status-latest-24") {
             response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?s={_id:-1}}&l=60&apiKey=$mongolabApiKey""").text
-        }
-
-        get("vaxthuset/api/daily-photos") {
-
-            def json = new JsonBuilder()
-
-            json {
-                dates(photoCatalog)
-            }
-
-            response.send json.toPrettyString()
-        }        
+        }       
 
     	/*
     	 * Static stuff

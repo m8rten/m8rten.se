@@ -6,7 +6,6 @@ $(document).ready(function() {
     google.setOnLoadCallback(update24hourData);
 
     updateCurrentTemperature();
-    loadDailyPhotoDates();
 
     setInterval(function() {
         updateCurrentTemperature();
@@ -95,39 +94,6 @@ function updateCurrentTemperature(){
 function updateImage(){
     d = new Date();
     $("#status-foto").attr("src", "img/foto.jpg?"+d.getTime());
-}
-  
-function dailyPhotoLooper(dailyPhotoDates){
-    var isLooping = false;
-    var currentDailyPhoto = 0;
-    var loop;
-    $('#daily-photo').click(function() {
-        if(!isLooping){
-            loop = setInterval(function() {
-                $("#daily-photo").attr("src", "img/daily-photo"+currentDailyPhoto+".jpg");
-                $("#daily-photo-date").text(dailyPhotoDates[currentDailyPhoto]);
-                currentDailyPhoto++;
-                if(currentDailyPhoto == dailyPhotoDates.length){
-                    currentDailyPhoto = 0;
-                };
-            }, 500);
-            isLooping = true;
-        } else {
-            clearInterval(loop)
-            isLooping = false;
-        }
-    });
-}
-
-function loadDailyPhotoDates(){
-    $.ajax({
-        dataType: "json",
-        url: 'api/daily-photos',
-        type: "GET",
-        success: function( response ) {        
-            dailyPhotoLooper(response.dates);
-        }   
-    });
 }
 
 function update24hourData(){
