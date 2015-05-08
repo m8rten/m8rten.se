@@ -41,7 +41,7 @@ ratpack {
 		 * Api calls
 		 */
         get("vaxthuset/api/status-hourly") {
-            response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?q={"minute":0}&apiKey=$mongolabApiKey""").text
+            response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?s={_id:-1}&q={"minute":0}&apiKey=$mongolabApiKey""").text
         }
 
         get("vaxthuset/api/status-latest") {
@@ -49,7 +49,7 @@ ratpack {
         }
 
         get("vaxthuset/api/status-latest-24") {
-            response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?s={_id:-1}}&l=60&apiKey=$mongolabApiKey""").text
+            response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?s={_id:-1}}&l=1140&apiKey=$mongolabApiKey""").text
         }       
 
     	/*

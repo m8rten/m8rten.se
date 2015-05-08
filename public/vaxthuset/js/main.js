@@ -42,17 +42,12 @@ function drawHistoricData(historicData) {
     data.addColumn('number', 'Klockan');
     data.addColumn('number', 'C');
 
-    // create some nice looking data with sin/cos
-    var steps = 50;  // number of datapoints will be steps*steps
-    var axisMax = 314;
-    var axisStep = axisMax / steps;
-
     var nrOfDays = Math.floor(historicData.length/24);
 
     for (var day = 0; day < nrOfDays; day+=1) {
         for (var hour = 0; hour < 24; hour+=1) {
             var temp = historicData[day*24+hour]
-            data.addRow([day-nrOfDays, hour, temp.temperature]);
+            data.addRow([day, temp.hour, temp.temperature]);
         }
     }
 
@@ -85,7 +80,7 @@ function updateCurrentTemperature(){
       url: 'api/status-latest',
       type: "GET",
       success: function( response ) {
-            $("#current-temperature").text(response[0].temperature);
+            $("#current-temperature").text(parseInt(response[0].temperature));
 
         }   
     });
@@ -109,7 +104,7 @@ function update24hourData(){
 
 function draw24Hour(historicData) {
     var data = new google.visualization.DataTable();
-    data.addColumn('number', 'Minut');
+    data.addColumn('timeofday', 'Minut');
     data.addColumn('number', 'Temp');
     data.addColumn('number', 'Ventilation');
 
@@ -119,7 +114,7 @@ function draw24Hour(historicData) {
 
     for (var minute = 0; minute < 60; minute+=1) {
         var status = historicData[minute];
-        data.addRow([minute, status.temperature, status.ventilation*5]);
+        data.addRow([[status.hour, status.minute, 0], status.temperature, status.ventilation*5]);
     }
 
     var options = {
