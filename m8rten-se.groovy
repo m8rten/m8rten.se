@@ -41,15 +41,20 @@ ratpack {
 		 * Api calls
 		 */
         get("vaxthuset/api/status-hourly") {
-            response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?s={_id:-1}&q={"minute":0}&apiKey=$mongolabApiKey""").text
+            response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?f={_id:0}&s={_id:-1}&q={"minute":0}&apiKey=$mongolabApiKey""").text
         }
 
+        get("vaxthuset/api/status-historic") {
+            def currentDate = new Date().format("yyyy-MM-dd")
+            response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?f={_id:0}&s={_id:-1}&q={\$and:[{date:{\$gt:"2015-05-07"}},{date:{\$lte:"${currentDate}"}},{minute:0}]}&apiKey=54SF3Z7w9BVVSE7w8C0lNCuzNnMtoPPl""").text
+        }        
+
         get("vaxthuset/api/status-latest") {
-            response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?s={_id:-1}}&l=1&apiKey=$mongolabApiKey""").text
+            response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?f={_id:0}&s={_id:-1}}&l=1&apiKey=$mongolabApiKey""").text
         }
 
         get("vaxthuset/api/status-latest-24") {
-            response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?s={_id:-1}}&l=1140&apiKey=$mongolabApiKey""").text
+            response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?f={_id:0}&s={_id:-1}}&l=1140&apiKey=$mongolabApiKey""").text
         }       
 
     	/*

@@ -24,7 +24,7 @@ $(document).ready(function() {
 function updateHistoricData(){
     $.ajax({
       dataType: "json",
-      url: 'api/status-hourly',
+      url: 'api/status-historic',
       type: "GET",
       success: function( response ) {
             drawHistoricData(response);
@@ -42,12 +42,13 @@ function drawHistoricData(historicData) {
     data.addColumn('number', 'Klockan');
     data.addColumn('number', 'C');
 
+    console.log(historicData.length);
     var nrOfDays = Math.floor(historicData.length/24);
 
     for (var day = 0; day < nrOfDays; day+=1) {
         for (var hour = 0; hour < 24; hour+=1) {
             var temp = historicData[day*24+hour]
-            data.addRow([day, temp.hour, temp.temperature]);
+            data.addRow([day, hour, temp.temperature]);
         }
     }
 
@@ -108,12 +109,9 @@ function draw24Hour(historicData) {
     data.addColumn('number', 'Temp');
     data.addColumn('number', 'Ventilation');
 
-    //console.log(new Date("2010-09-21T02:57:00Z"))
-    //console.log("2010-09-21T02:57:00Z")
-    //console.log(historicData[0].date.replace("/","-").replace("/","-").replace(".",":").replace("000Z","00Z"))
-
-    for (var minute = 0; minute < 60; minute+=1) {
+    for (var minute = 0; minute < 240; minute+=1) {
         var status = historicData[minute];
+        console.log(status)
         data.addRow([[status.hour, status.minute, 0], status.temperature, status.ventilation*5]);
     }
 
