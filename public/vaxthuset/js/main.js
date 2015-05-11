@@ -42,14 +42,17 @@ function drawHistoricData(historicData) {
     data.addColumn('number', 'Klockan');
     data.addColumn('number', 'C');
 
-    console.log(historicData.length);
     var nrOfDays = Math.floor(historicData.length/24);
 
-    for (var day = 0; day < nrOfDays; day+=1) {
-        for (var hour = 0; hour < 24; hour+=1) {
-            var temp = historicData[day*24+hour]
-            data.addRow([day, hour, temp.temperature]);
-        }
+    var currentDate = new Date();
+    currentDate.setHours(0,0,0,0);
+    for (var i = 0; i < historicData.length; i+=1) {
+        var temp = historicData[i];
+        var thenDate = new Date(temp.date);
+        thenDate = new Date(thenDate.getTime()+(thenDate.getTimezoneOffset()*60000));
+        thenDate.setHours(0,0,0,0);
+        var diff =  Math.floor(( currentDate - thenDate ) / 86400000)
+        data.addRow([diff, temp.hour, temp.temperature]);
     }
 
     // specify options
@@ -107,12 +110,10 @@ function draw24Hour(historicData) {
     var data = new google.visualization.DataTable();
     data.addColumn('timeofday', 'Minut');
     data.addColumn('number', 'Temp');
-    data.addColumn('number', 'Ventilation');
 
-    for (var minute = 0; minute < 240; minute+=1) {
+    for (var minute = 0; minute < 360; minute+=1) {
         var status = historicData[minute];
-        console.log(status)
-        data.addRow([[status.hour, status.minute, 0], status.temperature, status.ventilation*5]);
+        data.addRow([[status.hour, status.minute, 0], status.temperature]);
     }
 
     var options = {
@@ -124,9 +125,6 @@ function draw24Hour(historicData) {
         height: "300px",
         series: {
             0: {color: '#424242',
-                curveType: 'function'
-            },
-            1: {color: '#424242',
                 curveType: 'function'
             }
         }
