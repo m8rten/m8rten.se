@@ -4,6 +4,8 @@
 import static ratpack.groovy.Groovy.ratpack
 import groovy.json.JsonSlurper
 import groovy.json.JsonBuilder
+import groovy.time.TimeCategory
+
 /*
  * Loads configuration
  */
@@ -45,7 +47,6 @@ ratpack {
         }
 
         get("vaxthuset/api/status-historic") {
-            def currentDate = new Date().format("yyyy-MM-dd")
             response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?f={_id:0}&s={_id:-1}&q={\$and:[{date:{\$gt:"2015-05-11"}},{minute:0}]}&apiKey=54SF3Z7w9BVVSE7w8C0lNCuzNnMtoPPl""").text
         }        
 
@@ -55,11 +56,27 @@ ratpack {
 
         get("vaxthuset/api/status-latest-24") {
             response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?f={_id:0}&s={_id:-1}}&l=1440&apiKey=$mongolabApiKey""").text
-        }       
+        }
+
+        get("vaxthuset/api/highest-temperature") {
+            response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?f={_id:0}&l=1&s={temperature:-1}&q={date:{\$gt:"${oneWeekAgo()}"}}&apiKey=$mongolabApiKey""").text
+        }
+
+        get("vaxthuset/api/lowest-temperature") {
+            response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?f={_id:0}&l=1&s={temperature:1}&q={date:{\$gt:"${oneWeekAgo()}"}}&apiKey=$mongolabApiKey""").text
+        }
 
     	/*
     	 * Static stuff
     	 */
         assets "public"
     }
+}
+
+def oneWeekAgo() {
+    def currentDate = new Date()
+    use(TimeCategory) {
+        currentDate = currentDate - 1.week
+    }
+    currentDate.format("yyyy-MM-dd")
 }

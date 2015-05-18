@@ -108,6 +108,14 @@ body {
     color: #424242;
 }
 
+#lowest-temperature{
+    color: #6A79CD;
+}
+
+#highest-temperature{
+    color: #913730;
+}
+
 #help {
     -webkit-user-select: none;       
     -moz-user-select: none;

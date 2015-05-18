@@ -6,6 +6,8 @@ $(document).ready(function() {
     google.setOnLoadCallback(update24hourData);
 
     updateCurrentTemperature();
+    updateHighestTemperature();
+    updateLowestTemperature();
 
     setInterval(function() {
         updateCurrentTemperature();
@@ -85,6 +87,30 @@ function updateCurrentTemperature(){
       type: "GET",
       success: function( response ) {
             $("#current-temperature").text(parseInt(response[0].temperature));
+
+        }   
+    });
+}
+
+function updateHighestTemperature(){
+    $.ajax({
+      dataType: "json",
+      url: 'api/highest-temperature',
+      type: "GET",
+      success: function( response ) {
+            $("#highest-temperature").text(parseInt(response[0].temperature));
+
+        }   
+    });
+}
+
+function updateLowestTemperature(){
+    $.ajax({
+      dataType: "json",
+      url: 'api/lowest-temperature',
+      type: "GET",
+      success: function( response ) {
+            $("#lowest-temperature").text(parseInt(response[0].temperature));
 
         }   
     });
