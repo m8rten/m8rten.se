@@ -59,11 +59,11 @@ ratpack {
         }
 
         get("vaxthuset/api/highest-temperature") {
-            response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?f={_id:0}&l=1&s={temperature:-1}&q={date:{\$gt:"${oneWeekAgo()}"}}&apiKey=$mongolabApiKey""").text
+            response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?f={_id:0}&l=1&s={temperature:-1}&q={date:{\$gt:"${oneDayAgo()}"}}&apiKey=$mongolabApiKey""").text
         }
 
         get("vaxthuset/api/lowest-temperature") {
-            response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?f={_id:0}&l=1&s={temperature:1}&q={date:{\$gt:"${oneWeekAgo()}"}}&apiKey=$mongolabApiKey""").text
+            response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?f={_id:0}&l=1&s={temperature:1}&q={date:{\$gt:"${oneDayAgo()}"}}&apiKey=$mongolabApiKey""").text
         }
 
     	/*
@@ -73,10 +73,10 @@ ratpack {
     }
 }
 
-def oneWeekAgo() {
+def oneDayAgo() {
     def currentDate = new Date()
     use(TimeCategory) {
-        currentDate = currentDate - 1.week
+        currentDate = currentDate - 1.day
     }
     currentDate.format("yyyy-MM-dd")
 }

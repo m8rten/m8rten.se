@@ -136,10 +136,11 @@ function draw24Hour(historicData) {
     var data = new google.visualization.DataTable();
     data.addColumn('timeofday', 'Minut');
     data.addColumn('number', 'Temp');
+    data.addColumn('number', 'Temp2');
 
     for (var minute = 0; minute < 360; minute+=1) {
         var status = historicData[minute];
-        data.addRow([[status.hour, status.minute, 0], status.temperature]);
+        data.addRow([[status.hour, status.minute, 0], status.temperature, status.temperature+status.ventilation]);
     }
 
     var options = {
@@ -151,6 +152,9 @@ function draw24Hour(historicData) {
         height: "300px",
         series: {
             0: {color: '#424242',
+                curveType: 'function'
+            },
+            1: {color: '#424242',
                 curveType: 'function'
             }
         }
