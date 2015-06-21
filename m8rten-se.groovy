@@ -54,8 +54,12 @@ ratpack {
             response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?f={_id:0}&s={_id:-1}}&l=1&apiKey=$mongolabApiKey""").text
         }
 
-        get("vaxthuset/api/status-latest-24") {
-            response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?f={_id:0}&s={_id:-1}}&l=1440&apiKey=$mongolabApiKey""").text
+        get("vaxthuset/api/status-latest-5") {
+            response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?f={_id:0}&s={_id:-1}}&l=360&apiKey=$mongolabApiKey""").text
+        }
+
+        get("vaxthuset/api/status-latest-1") {
+            response.send new URL("""https://api.mongolab.com/api/1/databases/vaxthuset/collections/status?f={_id:0}&s={_id:-1}}&l=60&apiKey=$mongolabApiKey""").text
         }
 
         get("vaxthuset/api/highest-temperature") {

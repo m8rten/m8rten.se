@@ -3,7 +3,8 @@ google.load('visualization', '1', {packages: ['corechart', 'line']});
 $(document).ready(function() {
 
     google.setOnLoadCallback(updateHistoricData);
-    google.setOnLoadCallback(update24hourData);
+    google.setOnLoadCallback(update5hourData);
+    google.setOnLoadCallback(update1hourData);
 
     updateCurrentTemperature();
     updateHighestTemperature();
@@ -12,7 +13,7 @@ $(document).ready(function() {
     setInterval(function() {
         updateCurrentTemperature();
         updateImage();
-        update24hourData();
+        update5hourData();
     }, 60000);
 
     $(".title").hide();
@@ -121,18 +122,18 @@ function updateImage(){
     $("#status-foto").attr("src", "img/foto.jpg?"+d.getTime());
 }
 
-function update24hourData(){
+function update5hourData(){
     $.ajax({
       dataType: "json",
-      url: 'api/status-latest-24',
+      url: 'api/status-latest-5',
       type: "GET",
       success: function( response ) {
-            draw24Hour(response);
+            draw5Hour(response);
         }   
     });
 }
 
-function draw24Hour(historicData) {
+function draw5Hour(historicData) {
     var data = new google.visualization.DataTable();
     data.addColumn('timeofday', 'Minut');
     data.addColumn('number', 'Temp');
@@ -160,6 +161,52 @@ function draw24Hour(historicData) {
         }
     };
 
-      var chart = new google.visualization.LineChart(document.getElementById('24h-graph'));
+      var chart = new google.visualization.LineChart(document.getElementById('5h-graph'));
+      chart.draw(data, options);
+}
+
+function update1hourData(){
+    $.ajax({
+      dataType: "json",
+      url: 'api/status-latest-1',
+      type: "GET",
+      success: function( response ) {
+            draw1Hour(response);
+        }   
+    });
+}
+
+function draw1Hour(historicData) {
+    var data = new google.visualization.DataTable();
+    data.addColumn('timeofday', 'Minut');
+    data.addColumn('number', 'Temp');
+    data.addColumn('number', 'Ventilation');
+
+    for (var minute = 0; minute < 60; minute+=1) {
+        var status = historicData[minute];
+        data.addRow([[status.hour, status.minute, 0], status.temperature-0.7*status.ventilation, status.temperature]);
+    }
+
+    var options = {
+        legend: {
+            position : "none"
+        },
+        width: "300px",
+        backgroundColor: "#E5DED1",
+        height: "300px",
+        vAxis: {
+            viewWindowMode : 'maximized'
+        },
+        series: {
+            0: {color: '#913730',
+                curveType: 'function'
+            },
+            1: {color: '#424242',
+                curveType: 'function'
+            }
+        }
+    };
+
+      var chart = new google.visualization.LineChart(document.getElementById('1h-graph'));
       chart.draw(data, options);
 }
